@@ -9,6 +9,10 @@ python = "3.11.5"
 dvc = "^2.10.0"
 hydra-core = "^1.1.1"
 pdoc3 = "^0.10.0"
+scikit-learn = "^1.4.1.post1"
+makefile = "^1.1.0"
+pandas = "^2.2.1"
+ydata-profiling = "^4.6.5"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
