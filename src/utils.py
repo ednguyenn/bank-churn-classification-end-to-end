@@ -2,6 +2,7 @@ import sys
 import os
 import logging
 from datetime import datetime
+import pickle
 
 LOG_FILE=f"{datetime.now().strftime('%m_%d_%Y_%H_%M_%S')}.log"
 logs_path=os.path.join(os.getcwd(),"logs",LOG_FILE)
@@ -32,3 +33,14 @@ class CustomException(Exception):
     def __str__(self):
         return self.error_message
     
+def save_object(file_path, obj):
+    try:
+        dir_path = os.path.dirname(file_path)
+
+        os.makedirs(dir_path, exist_ok=True)
+
+        with open(file_path, "wb") as file_obj:
+            pickle.dump(obj, file_obj)
+
+    except Exception as e:
+        raise CustomException(e, sys)
