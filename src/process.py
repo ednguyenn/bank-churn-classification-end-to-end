@@ -104,11 +104,11 @@ class DataTransformartion:
             
             preprocessing_obj=self.get_data_transformer_object()
             
-            X_train_arr= preprocessing_obj.fit_transform(X_train)
-            X_test_arr=preprocessing_obj.transform(X_test)
+            X_train= preprocessing_obj.fit_transform(X_train)
+            X_test=preprocessing_obj.transform(X_test)
             
-            X_arr = np.c_[X_train_arr,np.array(y_train)]
-            y_arr = np.c_[X_test_arr,np.array(y_test)]
+            #X_arr = np.c_[X_train_arr,np.array(y_train)]
+            #y_arr = np.c_[X_test_arr,np.array(y_test)]
             
             logging.info("Saved preprocessing object")
             
@@ -117,8 +117,10 @@ class DataTransformartion:
                 obj=preprocessing_obj
             )
             return(
-                X_arr,
-                y_arr,
+                X_train,
+                y_train,
+                X_test,
+                y_test,
                 self.data_transformation_config.preprocessor_obj_file_path
             )
         except Exception as e:
@@ -132,4 +134,4 @@ if __name__ == "__main__":
     train_data,test_data=obj.initiate_data_ingestion()
     
     data_transformation=DataTransformartion()
-    X_arr,y_arr,_=data_transformation.initiate_data_transformation(train_data,test_data)
+    X_train,y_train,X_test,y_test,_=data_transformation.initiate_data_transformation(train_data,test_data)

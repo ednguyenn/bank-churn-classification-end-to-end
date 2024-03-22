@@ -3,6 +3,8 @@ import os
 import logging
 from datetime import datetime
 import pickle
+import sklearn.model_selection
+from sklearn.metrics import confusion_matrix,classification_report,accuracy_score,roc_auc_score
 
 LOG_FILE=f"{datetime.now().strftime('%m_%d_%Y_%H_%M_%S')}.log"
 logs_path=os.path.join(os.getcwd(),"logs",LOG_FILE)
@@ -44,3 +46,20 @@ def save_object(file_path, obj):
 
     except Exception as e:
         raise CustomException(e, sys)
+    
+def evaluate_models(X_train, y_train, X_test, y_test,models);
+    try:
+        acc = {}
+        
+        for i in range(len(list(models))):
+            model = list(models.values())[i]
+            
+            model.fit(X_train, y_train)
+            y_pred=model.predict(X_test)
+            
+            score=roc_auc_score(y_test,y_pred)
+            acc[list(models.keys())[i]] = score
+            return acc
+    except Exception as e:
+        raise CustomException(e,sys)
+            
