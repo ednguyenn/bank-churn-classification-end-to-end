@@ -55,14 +55,13 @@ class DataTransformartion:
         self.data_transformation_config=DataTransformationConfig()
     
             
-    def get_data_transformer_object(self,X_train):
+    def get_data_transformer_object(self):
         """
         This method is responsible for data tranformation
         """
         try:
-            numerical_columns = X_train.select_dtypes(include=['float64']).columns.tolist()
-            categorical_columns = X_train.select_dtypes(include=['object']).columns.tolist()
-#########################todo - drop that 3 columns############################
+            numerical_columns = ['Age','Balance','HasCrCard','IsActiveMember','EstimatedSalary']
+            categorical_columns = ['Geography','Gender','Tenure','NumOfProducts']
             
             num_pipeline = Pipeline(
                 steps=[
@@ -103,7 +102,7 @@ class DataTransformartion:
 
             logging.info("Applying preprocessing object on training set and test set")
             
-            preprocessing_obj=self.get_data_transformer_object(X_train)
+            preprocessing_obj=self.get_data_transformer_object()
             
             X_train_arr= preprocessing_obj.fit_transform(X_train)
             X_test_arr=preprocessing_obj.transform(X_test)
