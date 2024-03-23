@@ -26,13 +26,27 @@ class ModelTrainer:
         try:
             models= {
                 "Random Forest": RandomForestClassifier(),
-                "Decision Tree": DecisionTreeClassifier(),
-                "XGBoost": XGBClassifier(),
-                "KNN": KNeighborsClassifier(),
-                "Logistic Regressor": LogisticRegression()
+                "XGBoost": XGBClassifier()
+            }
+            params={
+                "Random Forest":{
+                                #'bootstrap': [True],
+                                #'max_depth': [80, 90, 100, 110],
+                                #'max_features': [2, 3],
+                                #'min_samples_leaf': [3, 4, 5],
+                                #'min_samples_split': [8, 10, 12],
+                                'n_estimators': [100, 200, 300]
+                },
+                
+                "XGBoost":{
+                    #'learning_rate':[.1,.01,.05,.001],
+                    'n_estimators': [8,16,32,64,128,256]
+                }
+                
+                
             }
             
-            model_report:dict=evaluate_models(X_train=X_train,y_train=y_train,X_test=X_test,y_test=y_test, models= models)
+            model_report:dict=evaluate_models(X_train=X_train,y_train=y_train,X_test=X_test,y_test=y_test, models= models,params=params)
             
             #get the model with the highest score
             best_model_score = max(sorted(model_report.values()))
