@@ -1,0 +1,40 @@
+{%extends "base.html"%} {%block title%} Home Page {%endblock%}
+{%block content%}
+<section style="text-align: center;">
+    <h2>Make prediction here</h2>
+
+    <form id="customDataForm" action="/predict" method="POST">
+        <label for="age">Age:</label><br>
+        <input type="number" id="age" name="age"><br>
+        
+        <label for="balance">Balance:</label><br>
+        <input type="number" id="balance" name="balance"><br>
+        
+        <label for="hascrcard">Has Credit Card (1 for Yes, 0 for No):</label><br>
+        <input type="number" id="hascrcard" name="hascrcard" step="1" min="0" max="1"><br>
+        
+        <label for="isactivemember">Is Active Member (1 for Yes, 0 for No):</label><br>
+        <input type="number" id="isactivemember" name="isactivemember" step="1" min="0" max="1"><br>
+        
+        <label for="estimatedsalary">Estimated Salary:</label><br>
+        <input type="number" id="estimatedsalary" name="estimatedsalary"><br>
+        
+        <label for="geography">Geography:</label><br>
+        <input type="text" id="geography" name="geography"><br>
+        
+        <label for="gender">Gender:</label><br>
+        <input type="text" id="gender" name="gender"><br>
+        
+        <label for="tenure">Tenure:</label><br>
+        <input type="number" id="tenure" name="tenure" ><br>
+        
+        <label for="numofproducts">Number of Products:</label><br>
+        <input type="number" id="numofproducts" name="numofproducts"><br>
+        
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <h2> The prediction is {{ result }} </h2>
+
+</section>
+{%endblock%}
