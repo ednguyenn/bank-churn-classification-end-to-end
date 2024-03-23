@@ -1,7 +1,8 @@
 import os 
 import sys
-from utils import CustomException, logging,save_object
 import pandas as pd 
+
+
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
@@ -9,6 +10,8 @@ from dataclasses import dataclass
 from sklearn.impute import SimpleImputer
 from sklearn.compose import ColumnTransformer
 import numpy as np
+
+from utils import CustomException, logging,save_object,evaluate_models
 
 
 @dataclass
@@ -49,6 +52,10 @@ class DataIngestion:
 @dataclass            
 class DataTransformationConfig:
     preprocessor_obj_file_path=os.path.join('models',"preprocessor.pkl")
+    X_train_data_path: str=os.path.join('data/processed',"X_train.csv")
+    y_train_data_path: str=os.path.join('data/processed',"y_train.csv")
+    X_test_data_path: str=os.path.join('data/processed',"X_test.csv")
+    y_test_data_path: str=os.path.join('data/processed',"y_test.csv")
     
 class DataTransformartion:
     def __init__(self):
@@ -87,6 +94,7 @@ class DataTransformartion:
             raise CustomException(e,sys)
     def initiate_data_transformation(self,train_path,test_path):
         try:
+            
             train_df=pd.read_csv(train_path)
             test_df=pd.read_csv(test_path)
             
@@ -107,9 +115,17 @@ class DataTransformartion:
             X_train= preprocessing_obj.fit_transform(X_train)
             X_test=preprocessing_obj.transform(X_test)
             
-            #X_arr = np.c_[X_train_arr,np.array(y_train)]
-            #y_arr = np.c_[X_test_arr,np.array(y_test)]
+            #save the processed datasets into data/processed folder
+            X_train_df = pd.DataFrame(X_train)
+            X_train_df.to_csv(self.data_transformation_config.X_train_data_path,index=False,header=True)
+            y_train.to_csv(self.data_transformation_config.y_train_data_path,index=False,header=True)
             
+            X_test_df = pd.DataFrame(X_test)
+            X_test_df.to_csv(self.data_transformation_config.X_test_data_path,index=False,header=True)
+            y_test.to_csv(self.data_transformation_config.y_test_data_path,index=False,header=True)
+               
+               
+               
             logging.info("Saved preprocessing object")
             
             save_object(
@@ -120,8 +136,7 @@ class DataTransformartion:
                 X_train,
                 y_train,
                 X_test,
-                y_test,
-                self.data_transformation_config.preprocessor_obj_file_path
+                y_test
             )
         except Exception as e:
             raise CustomException(e,sys)      
@@ -134,4 +149,11 @@ if __name__ == "__main__":
     train_data,test_data=obj.initiate_data_ingestion()
     
     data_transformation=DataTransformartion()
-    X_train,y_train,X_test,y_test,_=data_transformation.initiate_data_transformation(train_data,test_data)
+    X_train,y_train,X_test,y_test=data_transformation.initiate_data_transformation(train_data,test_data)
+
+    
+    #import ModelTrainer here to avoid circular import errror between process.py and train_model.py
+    from train_model import ModelTrainer
+    
+    model_trainer=ModelTrainer()
+    print(model_trainer.initiate_model_trainer(X_train,y_train,X_test,y_test))

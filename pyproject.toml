@@ -52,6 +52,7 @@ exclude = [
     "dist",
     "node_modules",
     "venv",
+    "models"
 ]
 
 # Same as Black.
