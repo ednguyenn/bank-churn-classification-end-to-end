@@ -24,8 +24,8 @@ var/
 .installed.cfg
 *.egg'
 venv
-models/*
-.models/*
+models/
+
 
 
 
