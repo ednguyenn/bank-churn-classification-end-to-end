@@ -25,6 +25,7 @@ def predict():
             tenure=int(request.form.get('tenure')),
             numofproducts=int(request.form.get('numofproducts'))
         )
+        #transfrom data into DataFrame get ready for prediction
         predict_df= data.get_data_as_df()
         print(predict_df)
         print("Before Prediction")

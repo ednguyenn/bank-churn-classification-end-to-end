@@ -7,6 +7,9 @@ class PredictionPipeline:
         pass
     
     def predict(self, features):
+        """_summary_
+        This method apply sequential steps to predict data and return prediction 
+        """
         try:
             #assign model 
             model_path = 'models/model.pkl'
@@ -45,6 +48,9 @@ class CustomData:
         self.numofproducts= numofproducts
         
     def get_data_as_df(self):
+        """ 
+        This method saves data into dictionary and transform to DataFrame format for prediction
+        """
         try:
             custom_input_dict = {   'Age': [self.age],
                                     'Balance': [self.balance],

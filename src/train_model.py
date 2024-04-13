@@ -24,6 +24,7 @@ class ModelTrainer:
             
     def initiate_model_trainer(self, X_train,y_train,X_test,y_test):
         try:
+            #list out models and corresponding params will be used
             models= {
                 "Random Forest": RandomForestClassifier(),
                 "XGBoost": XGBClassifier()
@@ -45,7 +46,7 @@ class ModelTrainer:
                 
                 
             }
-            
+            #evaluate different model then save them into a dictionary
             model_report:dict=evaluate_models(X_train=X_train,y_train=y_train,X_test=X_test,y_test=y_test, models= models,params=params)
             
             #get the model with the highest score
@@ -53,7 +54,6 @@ class ModelTrainer:
             
             #get the best model name
             best_model_name  = list(model_report.keys())[list(model_report.values()).index(best_model_score)]
-            
             best_model= models[best_model_name]
             
             #setting the baseline threshold for the best model 
@@ -62,6 +62,7 @@ class ModelTrainer:
             
             logging.info("Found the best model for the dataset")
             
+            #save modelTrainer into destination folder
             save_object(
                 file_path=self.model_trainer_config.trained_model_file_path,
                 obj=best_model

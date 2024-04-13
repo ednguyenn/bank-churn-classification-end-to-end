@@ -13,30 +13,44 @@ import numpy as np
 
 from utils import CustomException, logging,save_object,evaluate_models
 
-
+#a convenient way to define classes to store data
 @dataclass
 class DataIngestionConfig:
     train_data_path: str=os.path.join('data/raw',"train.csv")
     test_data_path: str=os.path.join('data/raw',"test.csv")
     raw_data_path: str=os.path.join('data/raw',"raw.csv")
     
+#class with data ingestion operation methods
 class DataIngestion:
+    #allow DataIngestion to access the paths defined in DataIngestionConfig
     def __init__(self):
         self.ingestion_config=DataIngestionConfig()
     
     def initiate_data_ingestion(self):
+        """_summary_
+        This method will retrieve data from origin source and save it to project directory
+        Then perform train_test_split and save them into corresponding folder
+
+        Returns: paths to train and test data
+       
+        """
         logging.info("Entered data ingestion method or component")
         try:
+            #read files from original source (raw data source)
             df = pd.read_csv('data/raw/kaggle_train.csv')
             logging.info("Read the raw dataset as dataframe")
             
+            #ensures that the destination directory for storing processed data exists
             os.makedirs(os.path.dirname(self.ingestion_config.train_data_path), exist_ok=True)
             
+            #save raw data which was read from orginal source to local destination
             df.to_csv(self.ingestion_config.raw_data_path, index=False,header=True)
             
+            #train test split
             logging.info("Train test split initiated")
             train_set, test_set=train_test_split(df,test_size=0.2, random_state=112)
             
+            #save train and test data into local destination
             train_set.to_csv(self.ingestion_config.train_data_path,index=False,header=True)
             test_set.to_csv(self.ingestion_config.test_data_path,index=False,header=True)
             
@@ -58,18 +72,21 @@ class DataTransformationConfig:
     y_test_data_path: str=os.path.join('data/processed',"y_test.csv")
     
 class DataTransformartion:
+    #initialize an attribute to save the processed data paths
     def __init__(self):
         self.data_transformation_config=DataTransformationConfig()
     
             
     def get_data_transformer_object(self):
         """
-        This method is responsible for data tranformation
+        This method generates data proprocessor 
         """
         try:
+            #sorted numerical and categorical columnsd
             numerical_columns = ['Age','Balance','HasCrCard','IsActiveMember','EstimatedSalary']
             categorical_columns = ['Geography','Gender','Tenure','NumOfProducts']
             
+            #create seperate Pipeline for numerical and categorical columns
             num_pipeline = Pipeline(
                 steps=[
                     ("impute",SimpleImputer(strategy="median")),
@@ -85,6 +102,7 @@ class DataTransformartion:
             
             logging.info("Columns transformed !")
             
+            #create a mutual preprocessor for all columns 
             preprocessor=ColumnTransformer(
                 [("numerical_pipeline",num_pipeline,numerical_columns),
                  ("categorical_pipeline",categorical_pipeline,categorical_columns)]
@@ -92,7 +110,12 @@ class DataTransformartion:
             return preprocessor
         except Exception as e:
             raise CustomException(e,sys)
+        
     def initiate_data_transformation(self,train_path,test_path):
+        """
+        This method will user preproccesor to transform data for model training
+        save X_train, y_train, X_test, y_test into data/processed folders 
+        """
         try:
             
             train_df=pd.read_csv(train_path)
@@ -128,6 +151,7 @@ class DataTransformartion:
                
             logging.info("Saved preprocessing object")
             
+            #save object into destination folder
             save_object(
                 file_path=self.data_transformation_config.preprocessor_obj_file_path,
                 obj=preprocessing_obj
