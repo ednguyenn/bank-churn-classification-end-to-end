@@ -2,8 +2,6 @@ from flask import Flask, request, render_template
 from src.pipeline import CustomData, PredictionPipeline
 
 
-
-
 application=Flask(__name__)
 
 app=application
