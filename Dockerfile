@@ -1,20 +1,26 @@
 # Use the official Python image from Docker Hub
 FROM python:3.11.5-slim
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+# Configure Poetry
+ENV POETRY_VERSION=1.8.3
+ENV POETRY_HOME=/opt/poetry
+ENV POETRY_VENV=/opt/poetry-venv
+ENV POETRY_CACHE_DIR=/opt/.cache
 
-# Set the working directory in the container
+# Install poetry separated from system interpreter
+RUN python3 -m venv $POETRY_VENV \
+	&& $POETRY_VENV/bin/pip install -U pip setuptools \
+	&& $POETRY_VENV/bin/pip install poetry==${POETRY_VERSION}
+
+# Add `poetry` to PATH
+ENV PATH="${PATH}:${POETRY_VENV}/bin"
+
 WORKDIR /app
 
-# Copy the poetry files and install dependencies
-COPY pyproject.toml poetry.lock /app/
-RUN pip install poetry && poetry config virtualenvs.create false && poetry install
-
-# Install AWS CLI
-RUN apt update -y && apt install awscli -y
-
+# Install dependencies
+COPY poetry.lock pyproject.toml ./
+RUN poetry config virtualenvs.create false \
+    && poetry install 
 # Copy the rest of the application code
 COPY . /app/
 
