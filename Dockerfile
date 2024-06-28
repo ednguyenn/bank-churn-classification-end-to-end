@@ -28,4 +28,4 @@ COPY . /app/
 EXPOSE 8080
 
 # Command to run the application
-CMD ["python", "app.py"]
+CMD ["sh", "-c", "python src/process.py && python app.py"]
