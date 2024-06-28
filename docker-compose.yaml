@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  my-python-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app  # Mount current directory to /app inside the container
+    ports:
+      - "8080:8080"
