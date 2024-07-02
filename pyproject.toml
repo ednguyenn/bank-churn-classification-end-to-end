@@ -17,6 +17,7 @@ xgboost = "^2.0.3"
 hyperopt = "^0.2.7"
 flask = "^3.0.2"
 dill = "^0.3.8"
+tree = "^0.2.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
